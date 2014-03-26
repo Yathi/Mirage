@@ -1,8 +1,9 @@
 from random import randint
+import pygraphviz as pgv
 import time
 
 actionSet = ["run", "attack", "hide", "try to protect", "creative solution"]
-resourceSet = {"health": ["run","hide", "attack"], "xbox": ["protect xbox"], 
+resourceSet = {"health": ["run","hide", "attack"], "xbox": ["protect xbox"],
 "money":["hide", "try to protect"], "house": ["try to protect", "creative solution"], "cat": ["protect cat"], "child" : ["protect child"]}
 threatenedResource = ["health", "xbox"]
 
@@ -29,7 +30,7 @@ class npc(object):
 	def __init__(self, name):
 		self.name = name
 		self.curiousityAction = ["Look", "Hear"]
-		self.impResources = ["health"]  
+		self.impResources = ["health"]
 		self.sayHello()
 	#Test method
 	def sayHello(self):
@@ -46,7 +47,7 @@ class npc(object):
 		#print "setting imp resource to " , x
 		self.impResources = x
 
-#The class for the animals in the game. 
+#The class for the animals in the game.
 class critters2(npc):
 	"""docstring for critters2"""
 	def __init__(self,name):
@@ -86,15 +87,32 @@ def emote(world_event):
 		elif world_event.dc > 0 and world_event.dc < 1:
 			return "Fear"
 		elif world_event.dc == 0:
-			return "Relief" 
+			return "Relief"
 
 #The MAIN Program Loop
+
+G = pgv.AGraph()
+G.graph_attr['label'] = "Mirage"
+G.node_attr['shape'] = 'oval'
+
+#The characters
+girl = "Random Girl"
+doggie = "Doggie"
+dragon = "Dragon"
+child = "Child"
+dad = "Dad"
+
+#The events
+bird = "Bird_Incoming"
+fire = "Fire"
+alien = "Alien_Invasion"
+
 while True:
-	print "\n1. Random Girl"
-	print "2. Doggie"
-	print "3. Dragon"
-	print "4. Child"
-	print "5. Dad"
+	print "\n" + girl
+	print doggie
+	print dragon
+	print child
+	print dad
 	select_char = int(raw_input("\nSelect your character : "))
 
 	#should create a object of the class here
@@ -111,27 +129,29 @@ while True:
 		char = human2("Dad")
 		char.setImpResource(["child", "health"])
 	else:
-		break #This breaks out of the While loop if some other event is selected. 
+		break #This breaks out of the While loop if some other event is selected.
 
+	G.add_node(char.name)
 	time.sleep(2)
+	G.layout()
+	G.draw('model.png')
 	#Present a list of possible events
-	print "\n1. Bird Incoming"
-	print "2. Fire"
-	print "3. Alien Invasion"
-	print "4. House Burning"
+	print "\n" + bird
+	print fire
+	print alien
 	current_event = int(raw_input("\nSelect the event you would like : "))
 	if current_event == 1:
-		event = world_event("bird_incoming", -0.4, 0.6, 0, "default", ["health"])  #Could work on maybe making these values dynamically generated
+		event = world_event(bird, -0.4, 0.6, 0, "default", ["health"])  #Could work on maybe making these values dynamically generated
 	elif current_event == 2:
-		event = world_event("Fire", -0.8, 1, 0, "default", ["health"])
+		event = world_event(fire, -0.8, 1, 0, "default", ["health"])
 	elif current_event == 3:
-		event = world_event("alien_invasion", -0.5, 0.8, 0, "default", ["health"])
-	elif current_event == 4:
-		event = world_event("house_burning", -1, 0.9, 0, "default", ["cat", "child", "health"])
+		event = world_event(alien, -0.5, 0.8, 0, "default", ["health"])
 	else:
 		break
 
+	G.add_node(event.name)
 	#Have the curiosity event of the object here
+	G.draw('model.png')
 	char.curious()
 	raw_input("\nPress any key to proceed ")
 	print "\n" , char.name , " finds out that there is a ", event.name , " and he/she is in " , emote(event)
