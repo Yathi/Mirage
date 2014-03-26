@@ -6,6 +6,7 @@ actionSet = ["run", "attack", "hide", "try to protect", "creative solution"]
 resourceSet = {"health": ["run","hide", "attack"], "xbox": ["protect xbox"],
 "money":["hide", "try to protect"], "house": ["try to protect", "creative solution"], "cat": ["protect cat"], "child" : ["protect child"]}
 threatenedResource = ["health", "xbox"]
+actionImplementSet = {}
 
 #The Class for all the world Events
 class world_event:
