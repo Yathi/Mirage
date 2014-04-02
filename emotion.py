@@ -6,9 +6,9 @@ actionSet = ["run", "attack", "hide", "try to protect", "creative solution"]
 resourceSet = {"health": ["run","hide", "attack"], "xbox": ["protect xbox"],
 "money":["hide", "try to protect"], "house": ["try to protect", "creative solution"], "cat": ["protect cat"], "child" : ["protect child"]}
 threatenedResource = ["health", "xbox"]
-actionImplementSet = {}
+actionImplementSet = {'attack': ['umbrella', 'fist', 'fire-The']}
 
-#The Class for all the world Events
+#extinguisher Class for all the world Events
 class world_event:
 	def __init__(self, name, desire, dc, pw, agent, patient):
 		self.name = name
@@ -38,7 +38,7 @@ class npc(object):
 		print "\n" , self.name , "welomes you!"
 	#The curiousity action
 	def curious(self):
-		print "\n", randAction(self.curiousityAction)
+		return randAction(self.curiousityAction)
 	def cope(self, world_event):
 		#print "Entered coping"
 		for x in world_event.patient:
@@ -92,8 +92,8 @@ def emote(world_event):
 
 #The MAIN Program Loop
 
-G = pgv.AGraph()
-G.graph_attr['label'] = "Mirage"
+G = pgv.AGraph(strict = False, directed = True)
+#G.graph_attr['label'] = "Mirage"
 G.node_attr['shape'] = 'oval'
 
 #The characters
@@ -132,10 +132,12 @@ while True:
 	else:
 		break #This breaks out of the While loop if some other event is selected.
 
-	G.add_node(char.name)
-	time.sleep(2)
-	G.layout()
-	G.draw('model.png')
+	G.add_node(char.name, color = 'aquamarine3')
+	
+	#stupid sleep timer to be removed
+	time.sleep(1)
+
+
 	#Present a list of possible events
 	print "\n" + bird
 	print fire
@@ -150,14 +152,41 @@ while True:
 	else:
 		break
 
-	G.add_node(event.name)
+
+
+	G.add_node(event.name, color = 'darkorchid4')
 	#Have the curiosity event of the object here
-	G.draw('model.png')
-	char.curious()
+	curious_action = char.curious() #Storing this so that the value does not change when we put the value in graph
+	print "\n" + curious_action
+	G.add_node(curious_action, color = 'gold4')
+	G.add_edge(char.name, curious_action)
+	G.add_edge(event.name, curious_action)
 	raw_input("\nPress any key to proceed ")
 	print "\n" , char.name , " finds out that there is a ", event.name , " and he/she is in " , emote(event)
-	time.sleep(2)
+	G.add_node(emote(event), color = 'darkseagreen')
+	G.add_edge(curious_action, emote(event))
+	
+	#sleep timer to be removed
+	time.sleep(1)
 	raw_input("\nPress any key to proceed ")
-	#Have the coping action here.
-	print "\n" , char.name , " is trying to " , char.cope(event)
+
+	possible_actions = []
+	#code to print all possible coping actions
+	for resource in event.patient:
+		if resource in char.impResources:
+			for x in resourceSet[resource]:
+				G.add_node(x, color = 'deepskyblue4')
+				possible_actions.append(x)
+
+	print possible_actions
+	G.subgraph(nbunch = possible_actions, name='Possible Actions', style = 'filled', color = 'gray9', label = 'cluster label', rank = 'same')
+
+
+
+	#Have the coping action here
+	coping_action = char.cope(event) #again coping is stored so that it is calculated once for one run
+	print "\n" , char.name , " is trying to " , coping_action
+	G.add_edge(emote(event), coping_action)
 	time.sleep(2)
+	G.layout(prog = 'dot')
+	G.draw('model.png')
