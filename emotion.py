@@ -1,6 +1,7 @@
 from random import randint
 import pygraphviz as pgv
 import time
+import os
 
 actionSet = ["run", "attack", "hide", "try to protect", "creative solution"]
 resourceSet = {"health": ["run","hide", "attack"], "xbox": ["protect xbox"],
@@ -104,9 +105,9 @@ child = "Child"
 dad = "Dad"
 
 #The events
-bird = "Bird_Incoming"
+bird = "Bird Incoming"
 fire = "Fire"
-alien = "Alien_Invasion"
+alien = "Alien  Invasion"
 
 while True:
 	print "\n" + girl
@@ -158,13 +159,25 @@ while True:
 	#Have the curiosity event of the object here
 	curious_action = char.curious() #Storing this so that the value does not change when we put the value in graph
 	print "\n" + curious_action
-	G.add_node(curious_action, color = 'gold4')
+
+	#Lines for curious action
+	G.add_node(curious_action, color = 'gold4', shape = 'box')
 	G.add_edge(char.name, curious_action)
 	G.add_edge(event.name, curious_action)
+
+	#curious action notices event.
+	notice_event = "Notice: " + event.name
+	G.add_node(notice_event)
+	G.add_edge(curious_action, notice_event)
+
+
+
 	raw_input("\nPress any key to proceed ")
 	print "\n" , char.name , " finds out that there is a ", event.name , " and he/she is in " , emote(event)
+
+	#Graph for emotion
 	G.add_node(emote(event), color = 'darkseagreen')
-	G.add_edge(curious_action, emote(event))
+	G.add_edge(notice_event, emote(event))
 	
 	#sleep timer to be removed
 	time.sleep(1)
@@ -175,11 +188,11 @@ while True:
 	for resource in event.patient:
 		if resource in char.impResources:
 			for x in resourceSet[resource]:
-				G.add_node(x, color = 'deepskyblue4')
+				G.add_node(x, color = 'deepskyblue4', shape = 'box')
 				possible_actions.append(x)
 
 	print possible_actions
-	G.subgraph(nbunch = possible_actions, name='Possible Actions', style = 'filled', color = 'gray9', label = 'cluster label', rank = 'same')
+	G.subgraph(nbunch = possible_actions, name='cluster1', style = 'filled', color = '', label = 'Possible Actions', rank = 'same')
 
 
 
@@ -190,3 +203,4 @@ while True:
 	time.sleep(2)
 	G.layout(prog = 'dot')
 	G.draw('model.png')
+	os.system('open model.png')
