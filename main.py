@@ -106,7 +106,7 @@ def start():
 
 		possible_actions = [] #This will store all the possible actions
 		#code to print all possible coping actions
-		print "\nThe event patient is ", event.patient
+		#print "\nThe event patient is ", event.patient
 
 		for resource in event.patient:
 			if resource in char.impResources:
@@ -119,7 +119,12 @@ def start():
 		show_actions(possible_actions, affected_resource)
 		print "\n The action suggested by the system is : ", suggest_action(possible_actions, char) 
 
-		action_num = int(raw_input("\n Please select an action number:"))
+		try:
+			action_num = int(raw_input("\n Please select an action number:"))
+		except ValueError:
+			print "\nPlease enter a number next time"
+			continue
+
 
 		if action_num == 1:
 			attack(char, event)
@@ -128,19 +133,20 @@ def start():
 		elif action_num == 3:
 			run(char, event)
 		else:
-			print "\n Select the action number again!!"
+			break
 
 
-		print "\nThe event patient is ", event.patient
-		print "\nThe event dc is ", event.dc
+		#print "\nThe event patient is ", event.patient
+		#print "\nThe event dc is ", event.dc
 
 		if event.patient == None:
 			break
 
 		try:
-			choice = int(raw_input("\n You see an Umbrella on the floor. Pick it up? 1 - Yes, 2 - No"))	
+			choice = int(raw_input("\n You see an Umbrella on the floor. Pick it up? 1 - Yes, 2 - No \n : "))	
 		except ValueError:
-			pass
+			print "\nPlease enter a number next time"
+			continue
 
 
 		if choice == 1:
