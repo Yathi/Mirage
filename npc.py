@@ -20,6 +20,8 @@ class npc(object):
 		self.name = name
 		self.curiousityAction = ["Look", "Hear"]
 		self.impResources = ["health"]
+		self.hasWeapon = False
+		self.safeDistance = False
 		self.sayHello()
 	#Test method
 	def sayHello(self):
