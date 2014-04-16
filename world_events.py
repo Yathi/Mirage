@@ -21,11 +21,11 @@ class world_event:
 		print '\nHello' , self.name
 
 	def hinder(self):
-		if self.dc > 0.1:
-			self.dc -= 0.2
-		else:
+		if self.dc < 0.21:
 			self.dc = 0
 			self.patient = None
+		else:
+			self.dc -= 0.2
 
 	def stop(self):
 		self.dc = 0

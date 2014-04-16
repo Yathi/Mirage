@@ -18,6 +18,7 @@ from npc import human2
 from cope import *
 import pygraphviz as pgv
 import os
+from random import random
 
 
 bird = "Bird Incoming"
@@ -101,12 +102,12 @@ def start():
 	G.add_edge(curious_action, notice_event)
 
 	current_node = notice_event #This is defined seperately so that when multiple instances of emote are called this can change. 
-	while True:
-		show_emotion(char, event, current_node)
+	show_emotion(char, event, current_node)
 
+	while True:
+		
 		possible_actions = [] #This will store all the possible actions
 		#code to print all possible coping actions
-		#print "\nThe event patient is ", event.patient
 
 		for resource in event.patient:
 			if resource in char.impResources:
@@ -120,7 +121,8 @@ def start():
 		print "\n The action suggested by the system is : ", suggest_action(possible_actions, char) 
 
 		try:
-			action_num = int(raw_input("\n Please select an action number:"))
+			if random() > 0.2:
+				action_num = int(raw_input("\n Please select an action number:"))
 		except ValueError:
 			print "\nPlease enter a number next time"
 			continue
@@ -135,9 +137,11 @@ def start():
 		else:
 			break
 
+		show_emotion(char, event, current_node)
+
 
 		#print "\nThe event patient is ", event.patient
-		#print "\nThe event dc is ", event.dc
+		print "\nThe event dc is ", event.dc
 
 		if event.patient == None:
 			break

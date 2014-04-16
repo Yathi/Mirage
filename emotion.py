@@ -16,7 +16,7 @@ def emote(world_event):
 	if world_event.desire > 0:
 		if world_event.dc == 1:
 			return "Joy"
-		elif world_event.dc < 1:
+		elif world_event.dc > 0 and world_event.dc < 1:
 			if world_event.dc > 0.6: 
 				return "High Hope"
 			elif world_event.dc > 0.3:
@@ -29,7 +29,7 @@ def emote(world_event):
 	elif world_event.desire < 0:
 		if world_event.dc == 1:
 			return "Distress"
-		elif world_event.dc < 1:
+		elif world_event.dc > 0 and world_event.dc < 1:
 			if world_event.dc > 0.6:
 				return "High Fear"
 			elif world_event.dc > 0.3:
